@@ -13,6 +13,9 @@
 #define RACKET_HEIGHT 100
 #define RACKET_SPEED 8
 
+#define BALL_SIZE 10
+#define BALL_SPEED 2
+
 /* Writes a string at position (x, y).
 Inputs :
     - float x, y : a position (x, y) in pixels;
