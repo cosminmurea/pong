@@ -55,6 +55,20 @@ No outputs.
 */
 void drawFrame();
 
+/* Normalizes a vector with two components.
+Inputs :
+    - float& x, y : the vector components
+Outputs :
+    - float& x, y : modified by reference;
+*/
+void normalizeVector(float& x, float& y);
+
+/* Handles ball collisions and trajectory.
+No inputs.
+No outputs.
+*/
+void updateBall();
+
 /* Updates state and redisplays the frame every 16 milliseconds.
 Callback for glutTimerFunc().
 Inputs :
@@ -71,7 +85,13 @@ No outputs.
 */
 void enable2D(int width, int height);
 
-/**/
+/* Handles the movement of the paddles and other keyboard
+related functionalities.
+Inputs :
+    - unsigned char key : the ASCII code of the pressed key;
+    - int x, y : window relative coordinates of the mouse;
+No outputs.
+*/
 void normalKeysHandler(unsigned char key, int x, int y);
 
 /* Initializes and starts the game.

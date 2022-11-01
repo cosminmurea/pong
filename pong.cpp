@@ -68,8 +68,8 @@ void normalizeVector(float& x, float& y) {
 
 void updateBall() {
     // Start by flying straight to the left.
-    ballPositionX += ballDirectionX * BALL_SIZE;
-    ballPositionY += ballDirectionY * BALL_SIZE;
+    ballPositionX += ballDirectionX * BALL_SPEED;
+    ballPositionY += ballDirectionY * BALL_SPEED;
 
     // Collisions
     //  1. Top border
@@ -97,8 +97,16 @@ void updateBall() {
         ballDirectionY = 0;
     }
     //  5. Left racket
-
+    if ((ballPositionX <= racketLeftX + RACKET_WIDTH + BALL_SIZE)) {
+        // 0.5 for top hit, 0 for center hit, -0.5 for bottom hit
+        ballDirectionX = fabs(ballDirectionX);
+        ballDirectionY = ((ballPositionY - racketLeftY) / RACKET_HEIGHT) - 0.5f;
+    }
     //  6. Right racket
+    if ((ballPositionX >= racketRightX - BALL_SIZE)) {
+        ballDirectionX = -fabs(ballDirectionX);
+        ballDirectionY = ((ballPositionY - racketRightY) / RACKET_HEIGHT) - 0.5f;
+    }
 
     normalizeVector(ballDirectionX, ballDirectionY);
 }
