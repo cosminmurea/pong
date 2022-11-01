@@ -1,5 +1,6 @@
 #include "pong.h"
 #include <GL/freeglut.h>
+#include <cmath>
 
 int scoreRight = 0;
 int scoreLeft = 0;
@@ -11,10 +12,8 @@ float racketRightY = WINDOW_HEIGHT / 2 - RACKET_HEIGHT / 2;
 
 float ballPositionX = WINDOW_WIDTH / 2;
 float ballPositionY = WINDOW_HEIGHT / 2;
-float ballDirectionX = 0.0f;
-float ballDirectionY = -1.0f;
-int ballSize = 10;
-int ballSpeed = 5;
+float ballDirectionX = -1.0f;
+float ballDirectionY = 0.0f;
 
 void drawText(float x, float y, std::string text) {
     glRasterPos2f(x, y);
@@ -53,16 +52,63 @@ void drawFrame() {
 
     drawRectangle(racketLeftX, racketLeftY, RACKET_WIDTH, RACKET_HEIGHT);
     drawRectangle(racketRightX, racketRightY, RACKET_WIDTH, RACKET_HEIGHT);
-    drawRectangle(ballPositionX - ballSize / 2, ballPositionY - ballSize / 2, ballSize, ballSize);
+    drawRectangle(ballPositionX - BALL_SIZE / 2, ballPositionY - BALL_SIZE / 2, BALL_SIZE, BALL_SIZE);
 
     glutSwapBuffers();
 }
 
-void updateBall() {
-    if (ballPositionY > 10) {
-        ballPositionX += ballDirectionX * ballSpeed;
-        ballPositionY += ballDirectionY * ballSpeed;
+void normalizeVector(float& x, float& y) {
+    float magnitude = sqrt((x * x) + (y * y));
+    if (magnitude != 0.0f) {
+        magnitude = 1.0f / magnitude;
+        x *= magnitude;
+        y *= magnitude;
     }
+}
+
+void updateBall() {
+    // Start by flying straight to the left.
+    ballPositionX += ballDirectionX * BALL_SPEED;
+    ballPositionY += ballDirectionY * BALL_SPEED;
+
+    // Collisions
+    //  1. Top border
+    if (ballPositionY > WINDOW_HEIGHT - BALL_SIZE - 10) {
+        ballDirectionY = -fabs(ballDirectionY);
+    }
+    //  2. Bottom border
+    if (ballPositionY < BALL_SIZE + 10) {
+        ballDirectionY = fabs(ballDirectionY);
+    }
+    //  3. Left border
+    if (ballPositionX < BALL_SIZE) {
+        ++scoreRight;
+        ballPositionX = WINDOW_WIDTH / 2;
+        ballPositionY = WINDOW_HEIGHT / 2;
+        ballDirectionX = fabs(ballDirectionX);
+        ballDirectionY = 0;
+    }
+    //  4. Right border
+    if (ballPositionX > WINDOW_WIDTH - BALL_SIZE) {
+        ++scoreLeft;
+        ballPositionX = WINDOW_WIDTH / 2;
+        ballPositionY = WINDOW_HEIGHT / 2;
+        ballDirectionX = -fabs(ballDirectionX);
+        ballDirectionY = 0;
+    }
+    //  5. Left racket
+    if ((ballPositionX <= racketLeftX + RACKET_WIDTH + BALL_SIZE)) {
+        // 0.5 for top hit, 0 for center hit, -0.5 for bottom hit
+        ballDirectionX = fabs(ballDirectionX);
+        ballDirectionY = ((ballPositionY - racketLeftY) / RACKET_HEIGHT) - 0.5f;
+    }
+    //  6. Right racket
+    if ((ballPositionX >= racketRightX - BALL_SIZE)) {
+        ballDirectionX = -fabs(ballDirectionX);
+        ballDirectionY = ((ballPositionY - racketRightY) / RACKET_HEIGHT) - 0.5f;
+    }
+
+    normalizeVector(ballDirectionX, ballDirectionY);
 }
 
 void updateState(int value) {
