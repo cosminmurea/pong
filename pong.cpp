@@ -97,13 +97,17 @@ void updateBall() {
         ballDirectionY = 0;
     }
     //  5. Left racket
-    if ((ballPositionX <= racketLeftX + RACKET_WIDTH + BALL_SIZE)) {
+    if ((ballPositionX <= racketLeftX + RACKET_WIDTH + BALL_SIZE) &&
+        (ballPositionY <= racketLeftY + RACKET_HEIGHT + BALL_SIZE) &&
+        (ballPositionY >= racketLeftY)) {
         // 0.5 for top hit, 0 for center hit, -0.5 for bottom hit
         ballDirectionX = fabs(ballDirectionX);
         ballDirectionY = ((ballPositionY - racketLeftY) / RACKET_HEIGHT) - 0.5f;
     }
     //  6. Right racket
-    if ((ballPositionX >= racketRightX - BALL_SIZE)) {
+    if ((ballPositionX >= racketRightX - BALL_SIZE) &&
+        (ballPositionY <= racketRightY + RACKET_HEIGHT + BALL_SIZE) &&
+        (ballPositionY >= racketRightY)) {
         ballDirectionX = -fabs(ballDirectionX);
         ballDirectionY = ((ballPositionY - racketRightY) / RACKET_HEIGHT) - 0.5f;
     }
