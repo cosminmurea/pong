@@ -1,14 +1,25 @@
 #include "pong.h"
+#include "Racket.h"
 #include <GL/freeglut.h>
 #include <cmath>
+
+/*
+Class structure :
+    1. class Racket
+        - data : racketX, racketY, RACKET_WIDTH, RACKET_HEIGHT, RACKET_SPEED
+    2. class Ball
+        - data : ballPositionX, ballPositionY, ballDirectionX, ballDirectionY, BALL_SIZE, BALL_SPEED
+        - methods : updateBall(), normalizeVector()
+    3. class GameEngine
+        - data : WINDOW_WIDTH, WINDOW_HEIGHT, UPDATE_RATE, scoreRight, scoreLeft
+        - methods : drawText(), drawnTextWidth(), scoreToString(), drawRectangle(), drawFrame(), updateState(), enable2D(), run()
+*/
 
 int scoreRight = 0;
 int scoreLeft = 0;
 
-float racketLeftX = 10.0f;
-float racketLeftY = WINDOW_HEIGHT / 2 - RACKET_HEIGHT / 2;
-float racketRightX = WINDOW_WIDTH - RACKET_WIDTH - 10;
-float racketRightY = WINDOW_HEIGHT / 2 - RACKET_HEIGHT / 2;
+Racket racketLeft(10.0f, WINDOW_HEIGHT / 2 - Racket::getHeight() / 2);
+Racket racketRight(WINDOW_WIDTH - Racket::getWidth() - 10, WINDOW_HEIGHT / 2 - Racket::getHeight() / 2);
 
 float ballPositionX = WINDOW_WIDTH / 2;
 float ballPositionY = WINDOW_HEIGHT / 2;
@@ -50,8 +61,8 @@ void drawFrame() {
     int scoreTextWidth = drawnTextWidth(GLUT_BITMAP_8_BY_13, scoreToString());              // used to help center the text
     drawText(WINDOW_WIDTH / 2 - scoreTextWidth / 2, WINDOW_HEIGHT - 20, scoreToString());
 
-    drawRectangle(racketLeftX, racketLeftY, RACKET_WIDTH, RACKET_HEIGHT);
-    drawRectangle(racketRightX, racketRightY, RACKET_WIDTH, RACKET_HEIGHT);
+    drawRectangle(racketLeft.getX(), racketLeft.getY(), Racket::getWidth(), Racket::getHeight());
+    drawRectangle(racketRight.getX(), racketRight.getY(), Racket::getWidth(), Racket::getHeight());
     drawRectangle(ballPositionX - BALL_SIZE / 2, ballPositionY - BALL_SIZE / 2, BALL_SIZE, BALL_SIZE);
 
     glutSwapBuffers();
@@ -97,19 +108,19 @@ void updateBall() {
         ballDirectionY = 0;
     }
     //  5. Left racket
-    if ((ballPositionX <= racketLeftX + RACKET_WIDTH + BALL_SIZE) &&
-        (ballPositionY <= racketLeftY + RACKET_HEIGHT + BALL_SIZE) &&
-        (ballPositionY >= racketLeftY)) {
+    if ((ballPositionX <= racketLeft.getX() + Racket::getWidth() + BALL_SIZE) &&
+        (ballPositionY <= racketLeft.getY() + Racket::getHeight() + BALL_SIZE) &&
+        (ballPositionY >= racketLeft.getY() - BALL_SIZE)) {
         // 0.5 for top hit, 0 for center hit, -0.5 for bottom hit
         ballDirectionX = fabs(ballDirectionX);
-        ballDirectionY = ((ballPositionY - racketLeftY) / RACKET_HEIGHT) - 0.5f;
+        ballDirectionY = ((ballPositionY - racketLeft.getY()) / Racket::getHeight()) - 0.5f;
     }
     //  6. Right racket
-    if ((ballPositionX >= racketRightX - BALL_SIZE) &&
-        (ballPositionY <= racketRightY + RACKET_HEIGHT + BALL_SIZE) &&
-        (ballPositionY >= racketRightY)) {
+    if ((ballPositionX >= racketRight.getX() - BALL_SIZE) &&
+        (ballPositionY <= racketRight.getY() + Racket::getHeight() + BALL_SIZE) &&
+        (ballPositionY >= racketRight.getY() - BALL_SIZE)) {
         ballDirectionX = -fabs(ballDirectionX);
-        ballDirectionY = ((ballPositionY - racketRightY) / RACKET_HEIGHT) - 0.5f;
+        ballDirectionY = ((ballPositionY - racketRight.getY()) / Racket::getHeight()) - 0.5f;
     }
 
     normalizeVector(ballDirectionX, ballDirectionY);
@@ -135,20 +146,20 @@ void normalKeysHandler(unsigned char key, int x, int y) {
         exit(0);
     }
 
-    if ((key == 119) && (racketLeftY < WINDOW_HEIGHT - RACKET_HEIGHT - 10)) {
-        racketLeftY += RACKET_SPEED;
+    if ((key == 119) && (racketLeft.getY() < WINDOW_HEIGHT - Racket::getHeight() - 10)) {
+        racketLeft.setY(racketLeft.getY() + Racket::getSpeed());
     }
 
-    if ((key == 115) && (racketLeftY > 10)) {
-        racketLeftY -= RACKET_SPEED;
+    if ((key == 115) && (racketLeft.getY() > 10)) {
+        racketLeft.setY(racketLeft.getY() - Racket::getSpeed());
     }
 
-    if ((key == 105) && (racketRightY < WINDOW_HEIGHT - RACKET_HEIGHT - 10)) {
-        racketRightY += RACKET_SPEED;
+    if ((key == 105) && (racketRight.getY() < WINDOW_HEIGHT - Racket::getHeight() - 10)) {
+        racketRight.setY(racketRight.getY() + Racket::getSpeed());
     }
 
-    if ((key == 107) && (racketRightY > 10)) {
-        racketRightY -= RACKET_SPEED;
+    if ((key == 107) && (racketRight.getY() > 10)) {
+        racketRight.setY(racketRight.getY() - Racket::getSpeed());
     }
 
     glutPostRedisplay();

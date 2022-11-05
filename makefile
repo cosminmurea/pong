@@ -6,7 +6,7 @@ run: pong.out
 	./pong.out
 
 pong.out: driver.cpp pong.cpp
-	$(CXX) $(CFLAGS) driver.cpp pong.cpp -o pong.out $(LINKING)
+	$(CXX) $(CFLAGS) driver.cpp pong.cpp Racket.cpp -o pong.out $(LINKING)
 
 .PHONY: clean
 
