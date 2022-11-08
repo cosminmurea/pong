@@ -6,8 +6,8 @@ class Ball {
     float posY;
     float dirX;
     float dirY;
-    static const int size;
     static const int speed;
+    static const int size;
 
     public:
 
@@ -18,8 +18,8 @@ class Ball {
     float getPosY();
     float getDirX();
     float getDirY();
-    static const int getSize();
     static const int getSpeed();
+    static const int getSize();
 
     // Setters
     void setPosX(float posX);

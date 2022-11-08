@@ -2,7 +2,7 @@
 
 const int Racket::width = 10;
 const int Racket::height = 100;
-const int Racket::speed = 8;
+const int Racket::speed = 4;
 
 Racket::Racket(float x, float y) {
     this->x = x;

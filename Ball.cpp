@@ -1,8 +1,8 @@
 #include "Ball.h"
 #include <cmath>
 
+const int Ball::speed = 3;
 const int Ball::size = 10;
-const int Ball::speed = 2;
 
 Ball::Ball(float posX, float posY, float dirX, float dirY) {
     this->posX = posX;
@@ -27,12 +27,12 @@ float Ball::getDirY() {
     return this->dirY;
 }
 
-const int Ball::getSize() {
-    return size;
-}
-
 const int Ball::getSpeed() {
     return speed;
+}
+
+const int Ball::getSize() {
+    return size;
 }
 
 void Ball::setPosX(float posX) {
