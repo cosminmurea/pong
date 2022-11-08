@@ -1,9 +1,13 @@
 #include "Window.h"
 #include <GL/freeglut.h>
 
+const int Window::updateRate = 1000 / 60;
+
 Window::Window(int width, int height) {
     this->width = width;
     this->height = height;
+    this->scoreLeft = 0;
+    this->scoreRight = 0;
 }
 
 int Window::getWidth() {
@@ -14,12 +18,32 @@ int Window::getHeight() {
     return this->height;
 }
 
+int Window::getScoreLeft() {
+    return this->scoreLeft;
+}
+
+int Window::getScoreRight() {
+    return this->scoreRight;
+}
+
+const int Window::getUpdateRate() {
+    return updateRate;
+}
+
 void Window::setWidth(int width) {
     this->width = width;
 }
 
 void Window::setHeight(int height) {
     this->height = height;
+}
+
+void Window::setScoreLeft(int scoreLeft) {
+    this->scoreLeft = scoreLeft;
+}
+
+void Window::setScoreRight(int scoreRight) {
+    this->scoreRight = scoreRight;
 }
 
 void Window::drawText(void* textFont, float x, float y, std::string text) {
@@ -55,6 +79,6 @@ void Window::enable2D() {
     glLoadIdentity();
 }
 
-std::string Window::scoreToString(int scoreLeft, int scoreRight) {
-    return std::to_string(scoreLeft) + " : " + std::to_string(scoreRight);
+std::string Window::scoreToString() {
+    return std::to_string(this->scoreLeft) + " : " + std::to_string(this->scoreRight);
 }

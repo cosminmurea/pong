@@ -4,10 +4,6 @@
 #include <GL/freeglut.h>
 #include <cmath>
 
-int updateRate = 16;
-int scoreLeft = 0;
-int scoreRight = 0;
-
 Window window(1000, 500);
 Racket racketLeft(10.0f, window.getHeight() / 2 - Racket::getHeight() / 2);
 Racket racketRight(window.getWidth() - Racket::getWidth() - 10, window.getHeight() / 2 - Racket::getHeight() / 2);
@@ -21,8 +17,9 @@ void drawFrame() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    int scoreTextWidth = window.drawnTextWidth(GLUT_BITMAP_8_BY_13, window.scoreToString(scoreLeft, scoreRight));
-    window.drawText(GLUT_BITMAP_8_BY_13, window.getWidth() / 2 - scoreTextWidth / 2, window.getHeight() - 20, window.scoreToString(scoreLeft, scoreRight));
+    // Compute position so as to center the text
+    int scoreTextWidth = window.drawnTextWidth(GLUT_BITMAP_8_BY_13, window.scoreToString());
+    window.drawText(GLUT_BITMAP_8_BY_13, window.getWidth() / 2 - scoreTextWidth / 2, window.getHeight() - 20, window.scoreToString());
 
     window.drawRectangle(racketLeft.getX(), racketLeft.getY(), Racket::getWidth(), Racket::getHeight());
     window.drawRectangle(racketRight.getX(), racketRight.getY(), Racket::getWidth(), Racket::getHeight());
@@ -81,7 +78,7 @@ void moveBall() {
     }
     //  3. Left border
     if (ball.getPosX() < Ball::getSize()) {
-        ++scoreRight;
+        window.setScoreRight(window.getScoreRight() + 1);
         ball.setPosX(window.getWidth() / 2);
         ball.setPosY(window.getHeight() / 2);
         ball.setDirX(fabs(ball.getDirX()));
@@ -89,7 +86,7 @@ void moveBall() {
     }
     //  4. Right border
     if (ball.getPosX() > window.getWidth() - Ball::getSize()) {
-        ++scoreLeft;
+        window.setScoreLeft(window.getScoreLeft() + 1);
         ball.setPosX(window.getWidth() / 2);
         ball.setPosY(window.getHeight() / 2);
         ball.setDirX(-fabs(ball.getDirX()));
@@ -124,7 +121,7 @@ void moveBall() {
 */
 void updateState(int value) {
     moveBall();
-    glutTimerFunc(updateRate, updateState, 0);
+    glutTimerFunc(Window::getUpdateRate(), updateState, 0);
     glutPostRedisplay();
 }
 
@@ -139,7 +136,7 @@ int main(int argc, char** argv) {
 
     glutDisplayFunc(drawFrame);
     glutKeyboardFunc(normalKeysHandler);
-    glutTimerFunc(updateRate, updateState, 0);
+    glutTimerFunc(Window::getUpdateRate(), updateState, 0);
 
     glutMainLoop();
 

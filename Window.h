@@ -6,6 +6,9 @@
 class Window {
     int width;
     int height;
+    int scoreLeft;
+    int scoreRight;
+    static const int updateRate;
 
     public:
 
@@ -14,10 +17,15 @@ class Window {
     // Getters
     int getWidth();
     int getHeight();
+    int getScoreLeft();
+    int getScoreRight();
+    static const int getUpdateRate();
 
     // Setters
     void setWidth(int width);
     void setHeight(int height);
+    void setScoreLeft(int scoreLeft);
+    void setScoreRight(int scoreRight);
 
     /*Writes a string at position (x, y).
     *Inputs :
@@ -57,7 +65,7 @@ class Window {
     *Outputs :
     *   - string score : the score represented as a string;
     */
-    std::string scoreToString(int scoreLeft, int scoreRight);
+    std::string scoreToString();
 };
 
 #endif
