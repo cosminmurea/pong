@@ -4,6 +4,10 @@
 #include <GL/freeglut.h>
 #include <cmath>
 
+// Usable keys: Esc - 0, W - 1, S - 2, I - 3, K - 4.
+// Initialized with false (0);
+bool keysPressed[5] = {false};
+
 Window window(1000, 500);
 Racket racketLeft(10.0f, window.getHeight() / 2 - Racket::getHeight() / 2);
 Racket racketRight(window.getWidth() - Racket::getWidth() - 10, window.getHeight() / 2 - Racket::getHeight() / 2);
@@ -28,34 +32,64 @@ void drawFrame() {
     glutSwapBuffers();
 }
 
+void handleKeyDown(unsigned char key, int x, int y) {
+    if (key == 27) {
+        keysPressed[0] = true;
+    }
+    if (key == 119) {
+        keysPressed[1] = true;
+    }
+    if (key == 115) {
+        keysPressed[2] = true;
+    }
+    if (key == 105) {
+        keysPressed[3] = true;
+    }
+    if (key == 107) {
+        keysPressed[4] = true;
+    }
+}
+
+void handleKeyUp(unsigned char key, int x, int y) {
+    if (key == 27) {
+        keysPressed[0] = false;
+    }
+    if (key == 119) {
+        keysPressed[1] = false;
+    }
+    if (key == 115) {
+        keysPressed[2] = false;
+    }
+    if (key == 105) {
+        keysPressed[3] = false;
+    }
+    if (key == 107) {
+        keysPressed[4] = false;
+    }
+}
+
 /*Handles the movement of the paddles and other keyboard related functionalities.
 *Inputs :
 *   - unsigned char key : the ASCII code of the pressed key;
 *   - int x, y : window relative coordinates of the mouse;
 *No outputs.
 */
-void normalKeysHandler(unsigned char key, int x, int y) {
-    if (key == 27) {
+void keyboardHandler() {
+    if (keysPressed[0]) {
         exit(0);
     }
-
-    if ((key == 119) && (racketLeft.getY() < window.getHeight() - Racket::getHeight() - 10)) {
+    if ((keysPressed[1]) && (racketLeft.getY() < window.getHeight() - Racket::getHeight() - 10)) {
         racketLeft.setY(racketLeft.getY() + Racket::getSpeed());
     }
-
-    if ((key == 115) && (racketLeft.getY() > 10)) {
+    if ((keysPressed[2]) && (racketLeft.getY() > 10)) {
         racketLeft.setY(racketLeft.getY() - Racket::getSpeed());
     }
-
-    if ((key == 105) && (racketRight.getY() < window.getHeight() - Racket::getHeight() - 10)) {
+    if ((keysPressed[3]) && (racketRight.getY() < window.getHeight() - Racket::getHeight() - 10)) {
         racketRight.setY(racketRight.getY() + Racket::getSpeed());
     }
-
-    if ((key == 107) && (racketRight.getY() > 10)) {
+    if ((keysPressed[4]) && (racketRight.getY() > 10)) {
         racketRight.setY(racketRight.getY() - Racket::getSpeed());
     }
-
-    glutPostRedisplay();
 }
 
 /*Handles ball collisions and trajectory.
@@ -120,6 +154,7 @@ void moveBall() {
 *No outputs.
 */
 void updateState(int value) {
+    keyboardHandler();
     moveBall();
     glutTimerFunc(Window::getUpdateRate(), updateState, 0);
     glutPostRedisplay();
@@ -135,7 +170,8 @@ int main(int argc, char** argv) {
     window.enable2D();
 
     glutDisplayFunc(drawFrame);
-    glutKeyboardFunc(normalKeysHandler);
+    glutKeyboardFunc(handleKeyDown);
+    glutKeyboardUpFunc(handleKeyUp);
     glutTimerFunc(Window::getUpdateRate(), updateState, 0);
 
     glutMainLoop();
