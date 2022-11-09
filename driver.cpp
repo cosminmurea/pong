@@ -4,14 +4,24 @@
 #include <GL/freeglut.h>
 #include <cmath>
 
-// Usable keys: Esc - 0, W - 1, S - 2, I - 3, K - 4.
+// Usable keys: Esc - 0, W - 1, S - 2, I - 3, K - 4, F - 5.
 // Initialized with false (0);
-bool keysPressed[5] = {false};
+bool keysPressed[6] = {false};
+bool fullScreen = false;
 
 Window window(1000, 500);
 Racket racketLeft(10.0f, window.getHeight() / 2 - Racket::getHeight() / 2);
 Racket racketRight(window.getWidth() - Racket::getWidth() - 10, window.getHeight() / 2 - Racket::getHeight() / 2);
 Ball ball(window.getWidth() / 2, window.getHeight() / 2, -1.0f, 0.0f);
+
+void toggleFullScreen() {
+    if (fullScreen) {
+        glutPositionWindow(0, 0);
+        glutReshapeWindow(window.getWidth(), window.getHeight());
+    } else {
+        glutFullScreen();
+    }
+}
 
 /*Handles drawing to the screen. Callback for glutDisplayFunc().
 *No inputs.
@@ -47,6 +57,10 @@ void handleKeyDown(unsigned char key, int x, int y) {
     }
     if (key == 107) {
         keysPressed[4] = true;
+    }
+    if (key == 102) {
+        toggleFullScreen();
+        fullScreen = !fullScreen;
     }
 }
 
@@ -164,6 +178,7 @@ int main(int argc, char** argv) {
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowPosition(0, 0);
     glutInitWindowSize(window.getWidth(), window.getHeight());
     glutCreateWindow("GLUT Pong");
     glColor3f(1.0f, 1.0f, 1.0f);
