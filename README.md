@@ -31,4 +31,5 @@ W - Move left racket up<br>
 S - Move left racket down<br>
 I - Move right racket up<br>
 K - Move right racket down<br>
+F - Toggle full-screen mode<br>
 Esc - Exit

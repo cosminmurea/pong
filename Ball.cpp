@@ -1,7 +1,7 @@
 #include "Ball.h"
 #include <cmath>
 
-const int Ball::speed = 3;
+const int Ball::speed = 5;
 const int Ball::size = 10;
 
 Ball::Ball(float posX, float posY, float dirX, float dirY) {

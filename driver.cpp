@@ -88,7 +88,7 @@ void handleKeyUp(unsigned char key, int x, int y) {
 *   - int x, y : window relative coordinates of the mouse;
 *No outputs.
 */
-void keyboardHandler() {
+void handleKeyboard() {
     if (keysPressed[0]) {
         exit(0);
     }
@@ -168,7 +168,7 @@ void moveBall() {
 *No outputs.
 */
 void updateState(int value) {
-    keyboardHandler();
+    handleKeyboard();
     moveBall();
     glutTimerFunc(Window::getUpdateRate(), updateState, 0);
     glutPostRedisplay();
@@ -184,6 +184,7 @@ int main(int argc, char** argv) {
     glColor3f(1.0f, 1.0f, 1.0f);
     window.enable2D();
 
+    glutSetCursor(GLUT_CURSOR_NONE);
     glutDisplayFunc(drawFrame);
     glutKeyboardFunc(handleKeyDown);
     glutKeyboardUpFunc(handleKeyUp);
