@@ -4,7 +4,7 @@ Simple Pong game developed using C++ and GLUT / OpenGL.
 
 # 1. Installation
 
-The game has been developed and tested on Ubuntu 20.04 LTS. A Windows compatible version is under development.<br>
+The game has been developed and tested on Ubuntu 20.04 LTS but also works on Windows 10.<br>
 
 - <span style="font-size: 1.5rem">Requirements</span>
     - Git

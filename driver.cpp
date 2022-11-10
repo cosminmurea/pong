@@ -4,10 +4,11 @@
 #include <GL/freeglut.h>
 #include <cmath>
 
-// Usable keys: Esc - 0, W - 1, S - 2, I - 3, K - 4, F - 5.
+// Usable keys: Esc - 0, W - 1, S - 2, I - 3, K - 4.
 // Initialized with false (0);
-bool keysPressed[6] = {false};
+bool keysPressed[5] = {false};
 bool fullScreen = false;
+bool paused = false;
 
 Window window(1000, 500);
 Racket racketLeft(10.0f, window.getHeight() / 2 - Racket::getHeight() / 2);
@@ -31,36 +32,49 @@ void drawFrame() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    // Compute position so as to center the text
-    int scoreTextWidth = window.drawnTextWidth(GLUT_BITMAP_8_BY_13, window.scoreToString());
-    window.drawText(GLUT_BITMAP_8_BY_13, window.getWidth() / 2 - scoreTextWidth / 2, window.getHeight() - 20, window.scoreToString());
+    if (paused) {
+        // Draw the menu
+    } else {
+        // Draw the game
+        // Compute position so as to center the text
+        int scoreTextWidth = window.drawnTextWidth(GLUT_BITMAP_8_BY_13, window.scoreToString());
+        window.drawText(GLUT_BITMAP_8_BY_13, window.getWidth() / 2 - scoreTextWidth / 2, window.getHeight() - 20, window.scoreToString());
 
-    window.drawRectangle(racketLeft.getX(), racketLeft.getY(), Racket::getWidth(), Racket::getHeight());
-    window.drawRectangle(racketRight.getX(), racketRight.getY(), Racket::getWidth(), Racket::getHeight());
-    window.drawRectangle(ball.getPosX() - Ball::getSize() / 2, ball.getPosY() - Ball::getSize() / 2, Ball::getSize(), Ball::getSize());
+        window.drawRectangle(racketLeft.getX(), racketLeft.getY(), Racket::getWidth(), Racket::getHeight());
+        window.drawRectangle(racketRight.getX(), racketRight.getY(), Racket::getWidth(), Racket::getHeight());
+        window.drawRectangle(ball.getPosX() - Ball::getSize() / 2, ball.getPosY() - Ball::getSize() / 2, Ball::getSize(), Ball::getSize());
+    }
 
     glutSwapBuffers();
 }
 
 void handleKeyDown(unsigned char key, int x, int y) {
+    if (paused) {
+        // Keyboard handler for the menu
+    } else {
+        // Keyboard handler for the game
+        if (key == 119) {
+            keysPressed[1] = true;
+        }
+        if (key == 115) {
+            keysPressed[2] = true;
+        }
+        if (key == 105) {
+            keysPressed[3] = true;
+        }
+        if (key == 107) {
+            keysPressed[4] = true;
+        }
+    }
     if (key == 27) {
         keysPressed[0] = true;
-    }
-    if (key == 119) {
-        keysPressed[1] = true;
-    }
-    if (key == 115) {
-        keysPressed[2] = true;
-    }
-    if (key == 105) {
-        keysPressed[3] = true;
-    }
-    if (key == 107) {
-        keysPressed[4] = true;
     }
     if (key == 102) {
         toggleFullScreen();
         fullScreen = !fullScreen;
+    }
+    if (key == 112) {
+        paused = !paused;
     }
 }
 
@@ -168,8 +182,14 @@ void moveBall() {
 *No outputs.
 */
 void updateState(int value) {
-    handleKeyboard();
-    moveBall();
+    if (paused) {
+        // Menu logic
+    } else {
+        // Game logic
+        handleKeyboard();
+        moveBall();
+    }
+
     glutTimerFunc(Window::getUpdateRate(), updateState, 0);
     glutPostRedisplay();
 }
@@ -181,10 +201,11 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(0, 0);
     glutInitWindowSize(window.getWidth(), window.getHeight());
     glutCreateWindow("GLUT Pong");
+    glutSetCursor(GLUT_CURSOR_NONE);
+    glutIgnoreKeyRepeat(1);
     glColor3f(1.0f, 1.0f, 1.0f);
     window.enable2D();
 
-    glutSetCursor(GLUT_CURSOR_NONE);
     glutDisplayFunc(drawFrame);
     glutKeyboardFunc(handleKeyDown);
     glutKeyboardUpFunc(handleKeyUp);
