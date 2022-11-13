@@ -1,5 +1,6 @@
 #include "Window.h"
 #include <GL/freeglut.h>
+#include <cmath>
 
 const int Window::updateRate = 1000 / 60;
 
@@ -46,19 +47,18 @@ void Window::setScoreRight(int scoreRight) {
     this->scoreRight = scoreRight;
 }
 
-void Window::drawText(void* textFont, float x, float y, std::string text) {
-    glRasterPos2f(x, y);
-    glutBitmapString(textFont, (const unsigned char*)text.c_str());
-}
-
-int Window::drawnTextWidth(void* textFont, std::string text) {
-    int textWidth = 0;
-
-    for(unsigned int i = 0; i < text.length(); i++) {
-        textWidth += glutBitmapWidth(textFont, text[i]);
+void Window::drawHCenteredText(void* textFont, int yOffset, std::string text, bool fullScreenFlag) {
+    float textPosX, textPosY;
+    if (fullScreenFlag) {
+        int textWidth = glutBitmapLength(textFont, (const unsigned char*)text.c_str());
+        textPosX = (float)this->width / 2.0f - textWidth / 4.0f;
+    } else {
+        int textWidth = glutBitmapLength(textFont, (const unsigned char*)text.c_str());
+        textPosX = (float)this->width / 2.0f - textWidth / 2.0f;
     }
-
-    return textWidth;
+    textPosY = this->height - yOffset;
+    glRasterPos2f(textPosX, textPosY);
+    glutBitmapString(textFont, (const unsigned char*)text.c_str());
 }
 
 void Window::drawRectangle(float x, float y, int width, int height) {
@@ -70,15 +70,38 @@ void Window::drawRectangle(float x, float y, int width, int height) {
     glEnd();
 }
 
+void Window::drawFilledCircle(float x, float y, int radius) {
+    int triangleAmount = 15;                // number of triangles used in drawing the circle
+    float twicePI = 2.0f * M_PI;
+
+    glBegin(GL_TRIANGLE_FAN);
+        glVertex2f(x, y);                   // center of the circle
+        for (int i = 0; i <= triangleAmount; i++) {
+            float posX = x + (radius * cos(i * twicePI / triangleAmount));
+            float posY = y + (radius * sin(i * twicePI / triangleAmount));
+            glVertex2f(posX, posY);
+        }
+    glEnd();
+}
+
 void Window::enable2D() {
     glViewport(0, 0, this->width, this->height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.0f, this->width, 0.0f, this->height, 0.0f, 1.0f);
+    glOrtho(0.0f, this->width, 0.0f, this->height, -1.0f, 1.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
 
 std::string Window::scoreToString() {
     return std::to_string(this->scoreLeft) + " : " + std::to_string(this->scoreRight);
+}
+
+void Window::toggleFullScreen(bool fullScreenFlag) {
+    if (fullScreenFlag) {
+        glutPositionWindow(0, 0);
+        glutReshapeWindow(this->width, this->height);
+    } else {
+        glutFullScreen();
+    }
 }

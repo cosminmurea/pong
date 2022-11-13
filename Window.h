@@ -27,23 +27,7 @@ class Window {
     void setScoreLeft(int scoreLeft);
     void setScoreRight(int scoreRight);
 
-    /*Writes a string at position (x, y).
-    *Inputs :
-    *   - void* textFont : a font for the drawn text;
-    *   - float x, y : a position (x, y) in pixels;
-    *   - string text : a string to write;
-    *No outputs.
-    */
-    void drawText(void* textFont, float x, float y, std::string text);
-
-    /*Computes the width of a text in pixels (based on the font).
-    *Inputs :
-    *   - void* textFont : the font used to write;
-    *   - string text : a string to measure;
-    *Outputs :
-    *   - int textWidth : the width of the text in pixels;
-    */
-    int drawnTextWidth(void* textFont, std::string text);
+    void drawHCenteredText(void* textFont, int yOffset, std::string text, bool fullScreenFlag);
 
     /*Draws a rectangle using OpenGL.
     *Inputs :
@@ -54,11 +38,15 @@ class Window {
     */
     void drawRectangle(float x, float y, int width, int height);
 
+    void drawFilledCircle(float x, float y, int radius);
+
     /*Sets up OpenGL configurations for 2D.
     *No inputs.
     *No outputs.
     */
     void enable2D();
+
+    void toggleFullScreen(bool fullScreenFlag);
 
     /* Converts the score to a string.
     *No inputs.
