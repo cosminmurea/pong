@@ -32,4 +32,5 @@ S - Move left racket down<br>
 I - Move right racket up<br>
 K - Move right racket down<br>
 F - Toggle full-screen mode<br>
-Esc - Exit
+P - Pause game<br>
+Esc - Quit game

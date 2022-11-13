@@ -1,28 +1,21 @@
-#include "Window.h"         // also includes <string>
+#include "Window.h"                     // also includes <string>
 #include "Racket.h"
 #include "Ball.h"
 #include <GL/freeglut.h>
 #include <cmath>
+#include <iostream>
 
-// Usable keys: Esc - 0, W - 1, S - 2, I - 3, K - 4.
-// Initialized with false (0);
-bool keysPressed[5] = {false};
+// Game control keys: W - 0, S - 1, I - 2, K - 3
+bool gameCtrlKeys[4] = {false};
+// F - toggle full-screen mode
 bool fullScreen = false;
+// P - pause the game
 bool paused = false;
 
 Window window(1000, 500);
 Racket racketLeft(10.0f, window.getHeight() / 2 - Racket::getHeight() / 2);
 Racket racketRight(window.getWidth() - Racket::getWidth() - 10, window.getHeight() / 2 - Racket::getHeight() / 2);
 Ball ball(window.getWidth() / 2, window.getHeight() / 2, -1.0f, 0.0f);
-
-void toggleFullScreen() {
-    if (fullScreen) {
-        glutPositionWindow(0, 0);
-        glutReshapeWindow(window.getWidth(), window.getHeight());
-    } else {
-        glutFullScreen();
-    }
-}
 
 /*Handles drawing to the screen. Callback for glutDisplayFunc().
 *No inputs.
@@ -34,15 +27,15 @@ void drawFrame() {
 
     if (paused) {
         // Draw the menu
+        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 200, "P - Resume Game", fullScreen);
+        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 240, "F - Full Screen Mode", fullScreen);
+        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 280, "Esc - Quit Game", fullScreen);
     } else {
         // Draw the game
-        // Compute position so as to center the text
-        int scoreTextWidth = window.drawnTextWidth(GLUT_BITMAP_8_BY_13, window.scoreToString());
-        window.drawText(GLUT_BITMAP_8_BY_13, window.getWidth() / 2 - scoreTextWidth / 2, window.getHeight() - 20, window.scoreToString());
-
+        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 20, window.scoreToString(), fullScreen);
         window.drawRectangle(racketLeft.getX(), racketLeft.getY(), Racket::getWidth(), Racket::getHeight());
         window.drawRectangle(racketRight.getX(), racketRight.getY(), Racket::getWidth(), Racket::getHeight());
-        window.drawRectangle(ball.getPosX() - Ball::getSize() / 2, ball.getPosY() - Ball::getSize() / 2, Ball::getSize(), Ball::getSize());
+        window.drawFilledCircle(ball.getPosX(), ball.getPosY(), Ball::getSize());
     }
 
     glutSwapBuffers();
@@ -50,27 +43,28 @@ void drawFrame() {
 
 void handleKeyDown(unsigned char key, int x, int y) {
     if (paused) {
-        // Keyboard handler for the menu
     } else {
         // Keyboard handler for the game
         if (key == 119) {
-            keysPressed[1] = true;
+            gameCtrlKeys[0] = true;
         }
         if (key == 115) {
-            keysPressed[2] = true;
+            gameCtrlKeys[1] = true;
         }
         if (key == 105) {
-            keysPressed[3] = true;
+            gameCtrlKeys[2] = true;
         }
         if (key == 107) {
-            keysPressed[4] = true;
+            gameCtrlKeys[3] = true;
         }
     }
+
+    // Keys that work in both the 'game' and 'menu' states
     if (key == 27) {
-        keysPressed[0] = true;
+        exit(0);
     }
     if (key == 102) {
-        toggleFullScreen();
+        window.toggleFullScreen(fullScreen);
         fullScreen = !fullScreen;
     }
     if (key == 112) {
@@ -79,20 +73,17 @@ void handleKeyDown(unsigned char key, int x, int y) {
 }
 
 void handleKeyUp(unsigned char key, int x, int y) {
-    if (key == 27) {
-        keysPressed[0] = false;
-    }
     if (key == 119) {
-        keysPressed[1] = false;
+        gameCtrlKeys[0] = false;
     }
     if (key == 115) {
-        keysPressed[2] = false;
+        gameCtrlKeys[1] = false;
     }
     if (key == 105) {
-        keysPressed[3] = false;
+        gameCtrlKeys[2] = false;
     }
     if (key == 107) {
-        keysPressed[4] = false;
+        gameCtrlKeys[3] = false;
     }
 }
 
@@ -102,20 +93,17 @@ void handleKeyUp(unsigned char key, int x, int y) {
 *   - int x, y : window relative coordinates of the mouse;
 *No outputs.
 */
-void handleKeyboard() {
-    if (keysPressed[0]) {
-        exit(0);
-    }
-    if ((keysPressed[1]) && (racketLeft.getY() < window.getHeight() - Racket::getHeight() - 10)) {
+void moveRacket() {
+    if ((gameCtrlKeys[0]) && (racketLeft.getY() < window.getHeight() - Racket::getHeight() - 10)) {
         racketLeft.setY(racketLeft.getY() + Racket::getSpeed());
     }
-    if ((keysPressed[2]) && (racketLeft.getY() > 10)) {
+    if ((gameCtrlKeys[1]) && (racketLeft.getY() > 10)) {
         racketLeft.setY(racketLeft.getY() - Racket::getSpeed());
     }
-    if ((keysPressed[3]) && (racketRight.getY() < window.getHeight() - Racket::getHeight() - 10)) {
+    if ((gameCtrlKeys[2]) && (racketRight.getY() < window.getHeight() - Racket::getHeight() - 10)) {
         racketRight.setY(racketRight.getY() + Racket::getSpeed());
     }
-    if ((keysPressed[4]) && (racketRight.getY() > 10)) {
+    if ((gameCtrlKeys[3]) && (racketRight.getY() > 10)) {
         racketRight.setY(racketRight.getY() - Racket::getSpeed());
     }
 }
@@ -173,7 +161,7 @@ void moveBall() {
         ball.setDirY(trajChange);
     }
 
-    ball.normalizeVector();
+    //ball.normalizeVector();
 }
 
 /*Updates state and redisplays the frame every 16 milliseconds. Callback for glutTimerFunc().
@@ -186,7 +174,7 @@ void updateState(int value) {
         // Menu logic
     } else {
         // Game logic
-        handleKeyboard();
+        moveRacket();
         moveBall();
     }
 
