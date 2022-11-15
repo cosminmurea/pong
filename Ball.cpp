@@ -1,7 +1,9 @@
 #include "Ball.h"
 #include <cmath>
 
-const int Ball::speed = 5;
+// The 'this' keyword is only used when needed (eg. parameters named the same as the data members).
+
+const int Ball::speed = 7;
 const int Ball::size = 10;
 
 Ball::Ball(float posX, float posY, float dirX, float dirY) {
@@ -12,19 +14,19 @@ Ball::Ball(float posX, float posY, float dirX, float dirY) {
 }
 
 float Ball::getPosX() {
-    return this->posX;
+    return posX;
 }
 
 float Ball::getPosY() {
-    return this->posY;
+    return posY;
 }
 
 float Ball::getDirX() {
-    return this->dirX;
+    return dirX;
 }
 
 float Ball::getDirY() {
-    return this->dirY;
+    return dirY;
 }
 
 const int Ball::getSpeed() {
@@ -52,10 +54,10 @@ void Ball::setDirY(float dirY) {
 }
 
 void Ball::normalizeVector() {
-    float magnitude = sqrt((this->dirX * this->dirX) + (this->dirY * this->dirY));
+    float magnitude = sqrt((dirX * dirX) + (dirY * dirY));
     if (magnitude != 0.0f) {
         magnitude = 1.0f / magnitude;
-        this->dirX *= magnitude;
-        this->dirY *= magnitude;
+        dirX *= magnitude;
+        dirY *= magnitude;
     }
 }

@@ -2,29 +2,31 @@
 #include <GL/freeglut.h>
 #include <cmath>
 
+// The 'this' keyword is only used when needed (eg. parameters named the same as the data members).
+
 const int Window::updateRate = 1000 / 60;
 
 Window::Window(int width, int height) {
     this->width = width;
     this->height = height;
-    this->scoreLeft = 0;
-    this->scoreRight = 0;
+    scoreLeft = 0;
+    scoreRight = 0;
 }
 
 int Window::getWidth() {
-    return this->width;
+    return width;
 }
 
 int Window::getHeight() {
-    return this->height;
+    return height;
 }
 
 int Window::getScoreLeft() {
-    return this->scoreLeft;
+    return scoreLeft;
 }
 
 int Window::getScoreRight() {
-    return this->scoreRight;
+    return scoreRight;
 }
 
 const int Window::getUpdateRate() {
@@ -51,12 +53,12 @@ void Window::drawHCenteredText(void* textFont, int yOffset, std::string text, bo
     float textPosX, textPosY;
     if (fullScreenFlag) {
         int textWidth = glutBitmapLength(textFont, (const unsigned char*)text.c_str());
-        textPosX = (float)this->width / 2.0f - textWidth / 4.0f;
+        textPosX = (float)width / 2.0f - textWidth / 4.0f;
     } else {
         int textWidth = glutBitmapLength(textFont, (const unsigned char*)text.c_str());
-        textPosX = (float)this->width / 2.0f - textWidth / 2.0f;
+        textPosX = (float)width / 2.0f - textWidth / 2.0f;
     }
-    textPosY = this->height - yOffset;
+    textPosY = height - yOffset;
     glRasterPos2f(textPosX, textPosY);
     glutBitmapString(textFont, (const unsigned char*)text.c_str());
 }
@@ -85,22 +87,22 @@ void Window::drawFilledCircle(float x, float y, int radius) {
 }
 
 void Window::enable2D() {
-    glViewport(0, 0, this->width, this->height);
+    glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.0f, this->width, 0.0f, this->height, -1.0f, 1.0f);
+    glOrtho(0.0f, width, 0.0f, height, -1.0f, 1.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
 
 std::string Window::scoreToString() {
-    return std::to_string(this->scoreLeft) + " : " + std::to_string(this->scoreRight);
+    return std::to_string(scoreLeft) + " : " + std::to_string(scoreRight);
 }
 
 void Window::toggleFullScreen(bool fullScreenFlag) {
     if (fullScreenFlag) {
         glutPositionWindow(0, 0);
-        glutReshapeWindow(this->width, this->height);
+        glutReshapeWindow(width, height);
     } else {
         glutFullScreen();
     }

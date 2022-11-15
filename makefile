@@ -6,7 +6,7 @@ run: pong.out
 	./pong.out
 
 pong.out: driver.cpp
-	$(CXX) $(CFLAGS) driver.cpp Window.cpp Racket.cpp Ball.cpp -o pong.out $(LINKING)
+	$(CXX) $(CFLAGS) driver.cpp Game.cpp Window.cpp Racket.cpp Ball.cpp -o pong.out $(LINKING)
 
 .PHONY: clean
 

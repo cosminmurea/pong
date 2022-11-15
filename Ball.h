@@ -27,7 +27,8 @@ class Ball {
     void setDirX(float dirX);
     void setDirY(float dirY);
 
-    /*Normalizes a vector with two components.
+    /*Handles the normalization of the ball direction vector.
+    *First compute the magnitude of the vector then divide each component by the magnitude.
     *No inputs.
     *No outputs.
     */

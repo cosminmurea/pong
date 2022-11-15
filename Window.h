@@ -27,6 +27,13 @@ class Window {
     void setScoreLeft(int scoreLeft);
     void setScoreRight(int scoreRight);
 
+    /*Draw horizontally centered text on the screen.
+    *Inputs :
+    *   - void* textFont : the GLUT font used to draw the text;
+    *   - int yOffset : the y-Axis offset from the top of the screen;
+    *   - string text : string of text to be drawn;
+    *   - bool fullScreenFlag : used check if full screen mode is enabled;
+    */
     void drawHCenteredText(void* textFont, int yOffset, std::string text, bool fullScreenFlag);
 
     /*Draws a rectangle using OpenGL.
@@ -38,9 +45,15 @@ class Window {
     */
     void drawRectangle(float x, float y, int width, int height);
 
+    /*Draws a filled circle using OpenGL.
+    *Inputs :
+    *   - float x, y : the position (x, y) of the center of the circle;
+    *   - int radius : the radius of the circle;
+    *No outputs.
+    */
     void drawFilledCircle(float x, float y, int radius);
 
-    /*Sets up OpenGL configurations for 2D.
+    /*Sets up OpenGL orthographic projection for 2D.
     *No inputs.
     *No outputs.
     */
