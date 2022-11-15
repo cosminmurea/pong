@@ -31,6 +31,12 @@ W - Move left racket up<br>
 S - Move left racket down<br>
 I - Move right racket up<br>
 K - Move right racket down<br>
+R - Resume game<br>
+N - New game<br>
 F - Toggle full-screen mode<br>
-P - Pause game<br>
 Esc - Quit game
+
+# 3. Screenshots
+
+<img src="images/glutGame.png" alt="GLUT Pong Game" width="900" height="400"/>
+<img src="images/glutMenu.png" alt="GLUT Pong Menu" width="900" height="400"/>

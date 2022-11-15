@@ -30,8 +30,9 @@ void Game::drawFrame() {
 
     if (paused) {
         // Draw the menu
-        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 200, "P - Resume Game", fullScreen);
-        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 240, "R - Restart Match", fullScreen);
+        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 20, window.scoreToString(), fullScreen);
+        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 200, "R - Resume Game", fullScreen);
+        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 240, "N - New Game", fullScreen);
         window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 280, "F - Full Screen Mode", fullScreen);
         window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 320, "Esc - Quit Game", fullScreen);
     } else {
@@ -48,7 +49,7 @@ void Game::drawFrame() {
 void Game::handleKeyDown(unsigned char key, int x, int y) {
     if (paused) {
         // Keyboard handler for the menu
-        if (key == 114) {
+        if (key == 110) {
             resetMatch();
         }
     } else {
@@ -75,7 +76,7 @@ void Game::handleKeyDown(unsigned char key, int x, int y) {
         window.toggleFullScreen(this->fullScreen);
         fullScreen = !fullScreen;
     }
-    if (key == 112) {
+    if (key == 114) {
         paused = !paused;
     }
 }
@@ -98,11 +99,22 @@ void Game::handleKeyUp(unsigned char key, int x, int y) {
 void Game::resetMatch() {
     window.setScoreLeft(0);
     window.setScoreRight(0);
-    ball.setPosX(window.getWidth() / 2);
-    ball.setPosY(window.getHeight() / 2);
+
+    // Reset the position of the rackets
+    racketLeft.setX(10.0f);
+    racketLeft.setY(window.getHeight() / 2.0f - Racket::getHeight() / 2.0f);
+    racketRight.setX(window.getWidth() - Racket::getWidth() - 10.0f);
+    racketRight.setY(window.getHeight() / 2.0f - Racket::getHeight() / 2.0f);
+
+    // Reset the position and direction of the ball
+    ball.setPosX(window.getWidth() / 2.0f);
+    ball.setPosY(window.getHeight() / 2.0f);
     ball.setDirX(-1.0f);
     ball.setDirY(0);
+
     paused = false;
+
+    glutPostRedisplay();
 }
 
 void Game::moveRackets() {
