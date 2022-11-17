@@ -73,7 +73,7 @@ void Window::drawRectangle(float x, float y, int width, int height) {
 }
 
 void Window::drawFilledCircle(float x, float y, int radius) {
-    int triangleAmount = 15;                // number of triangles used in drawing the circle
+    int triangleAmount = 18;                // number of triangles used in drawing the circle
     float twicePI = 2.0f * M_PI;
 
     glBegin(GL_TRIANGLE_FAN);
@@ -90,7 +90,7 @@ void Window::enable2D() {
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.0f, width, 0.0f, height, -1.0f, 1.0f);
+    glOrtho(0.0f, width, 0.0f, height, 0.0f, 1.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }

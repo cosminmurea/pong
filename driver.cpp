@@ -28,6 +28,11 @@ void updateState(int value) {
         // Menu logic
     } else {
         // Game logic
+        if (pong.getXMode()) {
+            if (pong.gameWon()) {
+                pong.setPaused(true);
+            }
+        }
         pong.moveRackets();
         pong.moveBall();
     }
