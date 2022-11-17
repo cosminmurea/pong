@@ -4,7 +4,7 @@
 // The 'this' keyword is only used when needed (eg. parameters named the same as the data members).
 
 const int Ball::speed = 7;
-const int Ball::size = 10;
+const int Ball::size = 8;
 
 Ball::Ball(float posX, float posY, float dirX, float dirY) {
     this->posX = posX;

@@ -12,6 +12,8 @@ class Game {
     bool fullScreen;
     // P - pause the game
     bool paused;
+    // X - enable first-to mode
+    bool xMode;
 
     public:
 
@@ -24,9 +26,25 @@ class Game {
 
     // Getters
     bool getPaused();
+    bool getXMode();
 
     // Setters
     void setPaused(bool paused);
+    void setXMode(bool xMode);
+
+    /*Checks if the game has been won or not.
+    *No inputs.
+    *Outputs :
+    *   - bool gameWon : represents the state of the game in xMode (won or ongoing);
+    */
+    bool gameWon();
+
+    /*Compares the scores and returns an appropriate winning message.
+    *No inputs.
+    *Outputs :
+    *   - string winner : winning message (for xMode only);
+    */
+    std::string whoWon();
 
     /*Handles drawing to the screen. Callback for glutDisplayFunc().
     *No inputs.
@@ -50,12 +68,11 @@ class Game {
     */
     void handleKeyUp(unsigned char key, int x, int y);
 
-    /*Reset the score to 0 - 0, position the ball in the center of the window
-    *and unpause the game by setting the paused flag to false.
+    /*Reset the score, the position of the rackets and the position and direction of the ball.
     *No inputs.
     *No outputs.
     */
-    void resetMatch();
+    void newGame();
 
     /*Handles the movement of the paddles.
     *No inputs.

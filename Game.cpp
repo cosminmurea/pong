@@ -20,24 +20,54 @@ bool Game::getPaused() {
     return paused;
 }
 
+bool Game::getXMode() {
+    return xMode;
+}
+
 void Game::setPaused(bool paused) {
     this->paused = paused;
+}
+
+void Game::setXMode(bool xMode) {
+    this->xMode = xMode;
+}
+
+bool Game::gameWon() {
+    return ((window.getScoreLeft() >= 2) || (window.getScoreRight() >= 2));
+}
+
+std::string Game::whoWon() {
+    std::string winner;
+    if (window.getScoreLeft() > window.getScoreRight()) {
+        winner = "Left Player Won";
+    } else {
+        winner = "Right Player Won";
+    }
+
+    return winner;
 }
 
 void Game::drawFrame() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
+    window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 20, window.scoreToString(), fullScreen);
+
     if (paused) {
+        if (xMode && gameWon()) {
+            // Draw the winning screen for X-Mode
+            glColor3f(1.0f, 0.0f, 0.0f);
+            window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 100, whoWon(), fullScreen);
+            glColor3f(1.0f, 1.0f, 1.0f);
+        }
         // Draw the menu
-        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 20, window.scoreToString(), fullScreen);
         window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 200, "R - Resume Game", fullScreen);
         window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 240, "N - New Game", fullScreen);
-        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 280, "F - Full Screen Mode", fullScreen);
-        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 320, "Esc - Quit Game", fullScreen);
+        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 280, "X - First to 10 Mode", fullScreen);
+        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 320, "F - Full Screen Mode", fullScreen);
+        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 360, "Esc - Quit Game", fullScreen);
     } else {
         // Draw the game
-        window.drawHCenteredText(GLUT_BITMAP_HELVETICA_18, 20, window.scoreToString(), fullScreen);
         window.drawRectangle(racketLeft.getX(), racketLeft.getY(), Racket::getWidth(), Racket::getHeight());
         window.drawRectangle(racketRight.getX(), racketRight.getY(), Racket::getWidth(), Racket::getHeight());
         window.drawFilledCircle(ball.getPosX(), ball.getPosY(), Ball::getSize());
@@ -50,7 +80,11 @@ void Game::handleKeyDown(unsigned char key, int x, int y) {
     if (paused) {
         // Keyboard handler for the menu
         if (key == 110) {
-            resetMatch();
+            newGame();
+        }
+        if (key == 120) {
+            newGame();
+            xMode = !xMode;
         }
     } else {
         // Keyboard handler for the game
@@ -73,7 +107,7 @@ void Game::handleKeyDown(unsigned char key, int x, int y) {
         exit(0);
     }
     if (key == 102) {
-        window.toggleFullScreen(this->fullScreen);
+        window.toggleFullScreen(fullScreen);
         fullScreen = !fullScreen;
     }
     if (key == 114) {
@@ -96,7 +130,7 @@ void Game::handleKeyUp(unsigned char key, int x, int y) {
     }
 }
 
-void Game::resetMatch() {
+void Game::newGame() {
     window.setScoreLeft(0);
     window.setScoreRight(0);
 
