@@ -4,7 +4,7 @@ Simple Pong game developed using C++ and GLUT / OpenGL.
 
 # 1. Installation
 
-The game has been developed and tested on Ubuntu 20.04 LTS but also works on Windows 10.<br>
+The game has been developed and tested on Ubuntu 20.04 LTS.<br>
 
 - <span style="font-size: 1.5rem">Requirements</span>
     - Git
@@ -33,6 +33,7 @@ I - Move right racket up<br>
 K - Move right racket down<br>
 R - Resume game<br>
 N - New game<br>
+X - Enable X-Mode<br>
 F - Toggle full-screen mode<br>
 Esc - Quit game
 

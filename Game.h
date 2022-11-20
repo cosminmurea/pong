@@ -74,7 +74,7 @@ class Game {
     */
     void newGame();
 
-    /*Handles the movement of the paddles.
+    /*Handles the movement of the rackets.
     *No inputs.
     *No outputs.
     */
