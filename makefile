@@ -1,4 +1,4 @@
-OBJS = driver.cpp Game.cpp Window.cpp Racket.cpp Ball.cpp
+OBJS = driver.cpp Pong.cpp Racket.cpp Ball.cpp
 OUT = pong.out
 CXX = g++
 CFLAGS = -g -Wall

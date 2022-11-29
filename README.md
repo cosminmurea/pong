@@ -41,3 +41,4 @@ Esc - Quit game
 
 <img src="images/glutGame.png" alt="GLUT Pong Game" width="900" height="400"/>
 <img src="images/glutMenu.png" alt="GLUT Pong Menu" width="900" height="400"/>
+<img src="images/glutGameWon.png" alt="GLUT Pong Game Won" width="900" height="400"/>
